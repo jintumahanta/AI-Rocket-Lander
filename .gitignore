@@ -1,0 +1,18 @@
+
+# Python virtual environments
+.venv/
+.venv312/
+venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Training logs and temporary files
+logs/
+*.log
+
+# IDE and operating system files
+.vscode/
+.idea/
+.DS_Store
