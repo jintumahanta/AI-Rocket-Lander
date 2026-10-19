@@ -1,304 +1,208 @@
-\# Rocket Landing with Reinforcement Learning: Reward Hacking and Reward Shaping
 
+# Rocket Landing with Reinforcement Learning: Reward Hacking and Reward Shaping
 
+A reinforcement learning project that investigates how reward design influences an AI agent's behavior when learning to land a simulated lunar lander. Using **Proximal Policy Optimization (PPO)** and Gymnasium's `LunarLander-v3` environment, this project compares a baseline agent, an agent trained with a deliberately flawed reward function, and an agent trained using progress-based reward shaping.
 
-A reinforcement learning project that trains an AI agent to land a simulated lunar lander using Proximal Policy Optimization (PPO). The project investigates how reward design influences agent behavior, demonstrates reward hacking, and evaluates progress-based reward shaping as a potential improvement.
+The goal is to demonstrate **reward hacking**—when an agent exploits its reward function without achieving the intended objective—and evaluate whether a better-designed reward function can improve landing performance.
 
+## Project Overview
 
+Three PPO agents are trained using different reward strategies:
 
-\## Project Overview
+1. **Baseline PPO:** Uses the environment's original reward function.
+2. **Reward-Hacking PPO:** Receives an additional `+1` reward at every simulation step, illustrating how a poorly designed reward function can encourage unnecessary survival and delayed task completion.
+3. **Progress-Shaped PPO:** Uses a progress-based shaping term and a small per-step penalty to encourage movement toward the landing area while discouraging unnecessary delays.
 
+All three agents are evaluated using the original `LunarLander-v3` reward function. This makes the comparison more meaningful because artificial training bonuses are excluded from the evaluation scores.
 
+## Objectives
 
-The agent learns to control a lunar lander in the Gymnasium LunarLander-v3 environment. Three approaches are compared:
+- Implement a reinforcement learning agent using PPO.
+- Investigate how reward design affects learned behavior.
+- Demonstrate reward hacking using an intentionally flawed reward function.
+- Develop and evaluate a progress-based reward-shaping strategy.
+- Compare agent performance using episode rewards and episode lengths.
+- Analyze the limitations of reward-based optimization in reinforcement learning.
 
+## Technologies Used
 
+- **Language:** Python 3.12
+- **Environment:** Gymnasium (`LunarLander-v3`)
+- **Reinforcement Learning:** Proximal Policy Optimization (PPO)
+- **RL Framework:** Stable-Baselines3
+- **Deep Learning:** PyTorch
+- **Numerical Computing:** NumPy
+- **Physics Simulation:** Box2D
 
-1\. \*\*Baseline PPO:\*\* Trained using the environment's original reward function.
+## Experimental Results
 
-2\. \*\*Reward-Hacking PPO:\*\* Given an additional +1 reward at every simulation step to demonstrate how poorly designed rewards can encourage undesirable behavior.
-
-3\. \*\*Progress-Shaped PPO:\*\* Uses a progress-based shaping term and a small per-step penalty to encourage movement toward the landing area while discouraging unnecessary delays.
-
-
-
-All three agents are evaluated using the original environment rewards, allowing performance comparisons without counting the artificial training bonuses.
-
-
-
-\## Objectives
-
-
-
-\- Implement a reinforcement learning agent using PPO.
-
-\- Investigate the effects of reward design on learned behavior.
-
-\- Demonstrate reward hacking through an intentionally flawed reward function.
-
-\- Implement and evaluate a progress-based reward-shaping approach.
-
-\- Compare trained agents using episode rewards and episode lengths.
-
-
-
-\## Technologies Used
-
-
-
-\- Python 3.12
-
-\- Gymnasium and Box2D
-
-\- Stable-Baselines3
-
-\- PyTorch
-
-\- NumPy
-
-\- Proximal Policy Optimization (PPO)
-
-\- Reinforcement Learning
-
-
-
-\## Experimental Results
-
-
-
-Each agent was evaluated over 10 episodes using the original LunarLander-v3 rewards.
-
-
+Each agent was evaluated over **10 episodes** using the original environment reward function.
 
 | Agent | Average Reward | Average Episode Length |
-
 |---|---:|---:|
-
 | Baseline PPO | -44.96 | Not recorded |
-
 | Reward-Hacking PPO | -106.44 | 804.1 steps |
-
 | Progress-Shaped PPO | 206.61 | 279.9 steps |
 
+### Key Results
 
+- **Progress-Shaped PPO achieved an average reward of 206.61**, exceeding the commonly used 200-point performance benchmark for LunarLander.
+- **Reward-Hacking PPO scored -106.44**, performing worse than the baseline despite receiving an additional reward at every simulation step during training.
+- The reward-hacking agent averaged 804.1 steps per episode, while the progress-shaped agent averaged 279.9 steps—a reduction of approximately **65.2%** in average episode length.
 
-The progress-shaped agent achieved an average reward above the target of 200. The reward-hacking agent performed worse than the baseline under the original reward function and frequently produced long episodes.
+These results illustrate that maximizing a poorly designed reward signal does not necessarily improve performance on the intended task.
 
+### Experimental Limitation
 
+The agents were trained using different timestep budgets:
 
-These results illustrate how an agent can optimize the reward it receives without necessarily optimizing the intended task.
+- Baseline PPO: 100,000 timesteps
+- Reward-Hacking PPO: 100,000 timesteps
+- Progress-Shaped PPO: 200,000 timesteps
 
+Because the progress-shaped agent received twice the training budget of the other agents, the results do not isolate the effect of reward design from the effect of additional training. Further experiments using equal training budgets, multiple random seeds, and more evaluation episodes are needed to establish a fairer comparison.
 
-
-\*\*Experimental limitation:\*\* The baseline and reward-hacking agents were trained for 100,000 timesteps each, while the progress-shaped agent was trained for 200,000 timesteps. Therefore, the comparison does not isolate reward design from training duration. Further controlled experiments with equal training budgets and additional evaluation episodes would strengthen the conclusions.
-
-
-
-\## Project Structure
-
-
+## Project Structure
 
 ```text
-
 AI-Rocket-Lander/
-
-├── train\_baseline.py
-
-├── evaluate\_baseline.py
-
-├── train\_reward\_hacking.py
-
-├── evaluate\_reward\_hacking.py
-
-├── watch\_reward\_hacking.py
-
-├── train\_shaped.py
-
-├── evaluate\_shaped.py
-
-├── watch\_shaped.py
-
+├── train_baseline.py
+├── evaluate_baseline.py
+├── train_reward_hacking.py
+├── evaluate_reward_hacking.py
+├── watch_reward_hacking.py
+├── train_shaped.py
+├── evaluate_shaped.py
+├── watch_shaped.py
 ├── requirements.txt
-
 ├── .gitignore
-
 └── README.md
-
 ```
 
+The training scripts generate the trained model files. Generated models and evaluation outputs may not be included in the repository.
 
+## Installation
 
-The trained model files are generated by the training scripts and are not listed in this source-code structure.
+### Prerequisites
 
+- Python 3.12
+- Git
+- A working Python environment with the required dependencies
 
-
-\## Installation
-
-
-
-Python 3.12 is recommended for this project.
-
-
-
-1\. Clone the repository:
-
-
-
-&#x20;  ```bash
-
-&#x20;  git clone <YOUR\_GITHUB\_REPOSITORY\_URL>
-
-&#x20;  cd AI-Rocket-Lander
-
-&#x20;  ```
-
-
-
-2\. Create a virtual environment:
-
-
-
-&#x20;  ```bash
-
-&#x20;  py -V:3.12 -m venv .venv
-
-&#x20;  ```
-
-
-
-3\. Activate it on Windows:
-
-
-
-&#x20;  ```bash
-
-&#x20;  .venv\\Scripts\\activate
-
-&#x20;  ```
-
-
-
-4\. Install dependencies:
-
-
-
-&#x20;  ```bash
-
-&#x20;  python -m pip install -r requirements.txt
-
-&#x20;  ```
-
-
-
-\## Running the Project
-
-
-
-Train the baseline agent:
-
-
+### 1. Clone the repository
 
 ```bash
-
-python train\_baseline.py
-
+git clone https://github.com/jintumahanta/AI-Rocket-Lander.git
+cd AI-Rocket-Lander
 ```
 
+### 2. Create a virtual environment
 
-
-Evaluate the baseline:
-
-
+On Windows:
 
 ```bash
-
-python evaluate\_baseline.py
-
+py -3.12 -m venv .venv
 ```
 
+### 3. Activate the virtual environment
 
+On Windows Command Prompt:
 
-Train and evaluate the reward-hacking agent:
+```bat
+.venv\Scripts\activate.bat
+```
 
+On Windows PowerShell:
 
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### 4. Install dependencies
 
 ```bash
-
-python train\_reward\_hacking.py
-
-python evaluate\_reward\_hacking.py
-
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
+If installation fails, check the Python version and the compatibility of the installed Gymnasium, Box2D, and Stable-Baselines3 dependencies.
 
+## Running the Project
 
-Train and evaluate the progress-shaped agent:
+Run the scripts from the repository's root directory.
 
+### 1. Train and evaluate the baseline agent
 
+Train the baseline PPO agent:
 
 ```bash
-
-python train\_shaped.py
-
-python evaluate\_shaped.py
-
+python train_baseline.py
 ```
 
-
-
-Watch the trained agents in the simulation window:
-
-
+Evaluate the trained baseline agent:
 
 ```bash
-
-python watch\_reward\_hacking.py
-
-python watch\_shaped.py
-
+python evaluate_baseline.py
 ```
 
+### 2. Train and evaluate the reward-hacking agent
 
+```bash
+python train_reward_hacking.py
+python evaluate_reward_hacking.py
+```
 
-\## Key Findings
+### 3. Train and evaluate the progress-shaped agent
 
+```bash
+python train_shaped.py
+python evaluate_shaped.py
+```
 
+### 4. Visualize agent behavior
 
-\- A constant survival bonus can encourage undesirable behavior.
+Watch the reward-hacking agent:
 
-\- Optimizing a proxy reward does not necessarily optimize the intended objective.
+```bash
+python watch_reward_hacking.py
+```
 
-\- Reward shaping can improve learning behavior, but its effectiveness must be verified using the original reward function.
+Watch the progress-shaped agent:
 
-\- Evaluation across multiple episodes is important because individual outcomes can vary.
+```bash
+python watch_shaped.py
+```
 
+**Note:** Run each evaluation or visualization script after the corresponding trained model has been generated and saved in the location expected by that script.
 
+## Key Findings
 
-\## Future Improvements
+- **Reward hacking:** A constant survival bonus can encourage an agent to prolong an episode rather than prioritize a successful landing.
+- **Reward alignment:** An agent can optimize the reward signal it receives without necessarily optimizing the actual objective.
+- **Reward shaping:** Progress-based rewards can provide more useful learning feedback when designed to align with the intended task.
+- **Evaluation matters:** Agents should be evaluated using the original task reward rather than artificial bonuses introduced during training.
+- **Experimental fairness:** Differences in training duration can influence results, so controlled experiments are essential for reliable comparisons.
 
+## Future Improvements
 
+- Train all agents using equal timestep budgets.
+- Repeat experiments across multiple random seeds.
+- Increase the number of evaluation episodes to improve statistical reliability.
+- Record episode rewards and lengths in CSV files.
+- Generate reward curves and comparative performance plots.
+- Experiment with alternative reward functions and PPO hyperparameters.
+- Measure successful landings, crashes, and time-limit truncations separately.
+- Compare the agents using mean reward, landing success rate, and episode length.
 
-\- Compare all agents using equal training timesteps and multiple random seeds.
+## Conclusion
 
-\- Increase the number of evaluation episodes.
+This project demonstrates how reward design can influence the behavior of reinforcement learning agents in a simulated lunar-landing task.
 
-\- Record episode rewards and lengths to CSV.
+The reward-hacking experiment illustrates that introducing a seemingly beneficial reward can produce undesirable behavior when the reward does not properly reflect the intended objective. In contrast, the progress-shaped agent achieved an average original-environment reward of **206.61 across 10 evaluation episodes**, exceeding the 200-point benchmark.
 
-\- Plot reward curves and comparative performance graphs.
+However, because the progress-shaped agent was trained for twice as many timesteps as the other agents, further controlled experiments are necessary to determine the extent to which reward shaping itself contributed to the improvement.
 
-\- Test alternative reward functions and PPO hyperparameters.
-
-\- Quantify successful landings, crashes, and time-limit truncations separately.
-
-
-
-\## Conclusion
-
-
-
-This project demonstrates a reinforcement learning workflow for simulated lander control, with an emphasis on reward hacking and reward shaping. The progress-shaped agent achieved an average original-environment reward of 206.61 across 10 evaluation episodes, meeting the project's initial average-reward target. Further controlled experiments are needed to establish how much of the improvement comes from reward design rather than additional training.
-
-
+The project highlights an important principle in reinforcement learning: **an agent's reward function should be designed to encourage the behavior we actually want, not merely behavior that maximizes the numerical reward.**
 
 
 
